@@ -6,7 +6,7 @@ require 'net/smtp'
 require 'gserver'
 
 
-class RumbsterTest < Test::Unit::TestCase
+class TestRumbster < Test::Unit::TestCase
   
   def setup
     @observer = RumbsterObserver.new

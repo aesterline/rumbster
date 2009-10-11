@@ -3,7 +3,7 @@ $:.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 require 'test/unit'
 require 'smtp_protocol'
 
-class SmtpProtocolTest < Test::Unit::TestCase
+class TestSmtpProtocol < Test::Unit::TestCase
   
   def test_protocol_sets_protocol_property_on_each_state
     init_state = TestState.new

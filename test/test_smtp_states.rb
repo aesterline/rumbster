@@ -4,7 +4,7 @@ require 'test/unit'
 require 'stringio'
 require 'smtp_protocol'
 
-class SmtpStatesTest < Test::Unit::TestCase
+class TestSmtpStates < Test::Unit::TestCase
  
   def setup
     buffer = ''

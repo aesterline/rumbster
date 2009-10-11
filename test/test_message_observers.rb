@@ -4,7 +4,7 @@ require 'test/unit'
 require 'fileutils'
 require 'message_observers'
 
-class MessageObserversTest < Test::Unit::TestCase
+class TestMessageObservers < Test::Unit::TestCase
   
   include FileUtils
   
