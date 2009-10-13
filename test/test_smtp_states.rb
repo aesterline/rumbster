@@ -167,6 +167,15 @@ class TestSmtpStates < Test::Unit::TestCase
     
     assert_equal "221 ruby goodbye\n", @client_stream.readline
   end
+
+  def test_quit_state_passes_done_as_next_state
+    @client_stream.puts "QUIT"
+    quit_state = QuitState.new(@protocol)
+    
+    next_state = quit_state.serve(@server_stream)
+  
+    assert_equal :done, next_state
+  end
   
   def test_quit_state_raises_not_initialized_when_protocol_is_not_set
     quit_state = QuitState.new
