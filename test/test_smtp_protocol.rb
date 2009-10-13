@@ -22,16 +22,6 @@ class TestSmtpProtocol < Test::Unit::TestCase
     assert init_state.called
   end
   
-  def test_state_is_changed_when_a_new_state_is_set
-    next_state = TestState.new
-    
-    protocol = SmtpProtocol.new(:init, {:init => TestState.new, :next => next_state})
-    protocol.state = :next
-    protocol.serve(nil)
-    
-    assert next_state.called
-  end
-  
   def test_listeners_are_notified_when_a_new_message_is_received
     protocol = SmtpProtocol.new(:init, {:init => TestState.new})
     observer = TestObserver.new
@@ -59,6 +49,7 @@ class TestState
   
   def serve(io)
     @called = true
+    :done
   end
   
 end

@@ -22,9 +22,9 @@ class TestSmtpStates < Test::Unit::TestCase
   
   def test_initial_state_passes_protocol_connect_as_the_next_state_in_the_chain
     init_state = InitState.new(@protocol)
-    init_state.serve(@server_stream)
+    next_state = init_state.serve(@server_stream)
     
-    assert_equal :connect, @protocol.state
+    assert_equal :connect, next_state 
   end
   
   def test_initial_state_raises_not_initialized_when_protocol_is_not_set
@@ -48,9 +48,9 @@ class TestSmtpStates < Test::Unit::TestCase
     @client_stream.puts "HELO test.client"
     connect_state = ConnectState.new(@protocol)
 
-    connect_state.serve(@server_stream)
+    next_state = connect_state.serve(@server_stream)
     
-    assert_equal :connected, @protocol.state
+    assert_equal :connected, next_state 
   end
   
   def test_connect_state_raises_not_initialized_when_protocol_is_not_set
@@ -74,9 +74,9 @@ class TestSmtpStates < Test::Unit::TestCase
     @client_stream.puts "MAIL FROM:<junk@junkster.com>"
     connected_state = ConnectedState.new(@protocol)
 
-    connected_state.serve(@server_stream)
+    next_state = connected_state.serve(@server_stream)
     
-    assert_equal :connected, @protocol.state
+    assert_equal :connected, next_state 
   end
   
   def test_rcpt_okayed_while_in_connected_state
@@ -92,9 +92,9 @@ class TestSmtpStates < Test::Unit::TestCase
     @client_stream.puts "RCPT TO:<foo@foo.com>"    
     connected_state = ConnectedState.new(@protocol)
 
-    connected_state.serve(@server_stream)
+    next_state = connected_state.serve(@server_stream)
     
-    assert_equal :connected, @protocol.state
+    assert_equal :connected, next_state 
   end
   
   def test_data_request_given_the_go_ahead_while_in_connected_state
@@ -110,9 +110,9 @@ class TestSmtpStates < Test::Unit::TestCase
     @client_stream.puts "DATA"
     connected_state = ConnectedState.new(@protocol)
 
-    connected_state.serve(@server_stream)
+    next_state = connected_state.serve(@server_stream)
     
-    assert_equal :read_mail, @protocol.state
+    assert_equal :read_mail, next_state 
   end
   
   def test_connected_state_raises_not_initialized_when_protocol_is_not_set
@@ -146,9 +146,9 @@ class TestSmtpStates < Test::Unit::TestCase
     @client_stream.puts "To: junk@junk.com\nFrom: junk2@junk2.com\n\nHi\n.\n"
     read_mail_state = ReadMailState.new(@protocol)
     
-    read_mail_state.serve(@server_stream)
+    next_state = read_mail_state.serve(@server_stream)
     
-    assert_equal :quit, @protocol.state
+    assert_equal :quit, next_state 
   end
   
   def test_read_mail_state_raises_not_initialized_when_protocol_is_not_set

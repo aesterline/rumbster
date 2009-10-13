@@ -7,7 +7,6 @@ module State
     raise NotInitializedError.new if @protocol.nil?
     
     service_request(io)
-    @protocol.state = @next_state
     @next_state
   end  
 end
