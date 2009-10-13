@@ -8,7 +8,7 @@ module State
     
     service_request(io)
     @protocol.state = @next_state
-    @protocol.serve(io)
+    @next_state
   end  
 end
 
@@ -148,6 +148,7 @@ class QuitState
     
     read_quit(io)
     goodbye(io)
+    :done
   end
   
   private

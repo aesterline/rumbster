@@ -27,13 +27,6 @@ class TestSmtpStates < Test::Unit::TestCase
     assert_equal :connect, @protocol.state
   end
   
-  def test_initial_state_passes_protocol_the_same_io_as_it_received
-    init_state = InitState.new(@protocol)
-    init_state.serve(@server_stream)
-    
-    assert_same @server_stream, @protocol.io
-  end
-  
   def test_initial_state_raises_not_initialized_when_protocol_is_not_set
     init_state = InitState.new
     
@@ -58,15 +51,6 @@ class TestSmtpStates < Test::Unit::TestCase
     connect_state.serve(@server_stream)
     
     assert_equal :connected, @protocol.state
-  end
-  
-  def test_connect_state_passes_protocol_the_same_io_as_it_received
-    @client_stream.puts "HELO test.client"
-    connect_state = ConnectState.new(@protocol)
-
-    connect_state.serve(@server_stream)
-    
-    assert_same @server_stream, @protocol.io
   end
   
   def test_connect_state_raises_not_initialized_when_protocol_is_not_set
@@ -111,15 +95,6 @@ class TestSmtpStates < Test::Unit::TestCase
     connected_state.serve(@server_stream)
     
     assert_equal :connected, @protocol.state
-  end
-  
-  def test_connected_state_passes_protocol_the_same_io_as_it_received
-    @client_stream.puts "MAIL FROM:<foo@foo.com>"
-    connected_state = ConnectedState.new(@protocol)
-
-    connected_state.serve(@server_stream)
-    
-    assert_same @server_stream, @protocol.io
   end
   
   def test_data_request_given_the_go_ahead_while_in_connected_state

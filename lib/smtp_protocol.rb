@@ -30,7 +30,12 @@ class SmtpProtocol
   end
   
   def serve(io)
-    @state.serve(io)
+    next_state = :init
+    count = 0
+    until next_state == :done or count > 10 do 
+      @state.serve(io)
+      count += 1
+    end
   end
   
   def new_message_received(message)
