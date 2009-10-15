@@ -14,14 +14,14 @@ class TestSmtpStates < Test::Unit::TestCase
   end
  
   def test_greeting_is_returned_upon_initial_client_connection
-    init_state = InitState.new(@protocol)
+    init_state = InitState.new
     init_state.serve(@server_stream)
        
     assert_equal "220 ruby ESMTP\n", @client_stream.readline
   end
   
   def test_initial_state_passes_protocol_connect_as_the_next_state_in_the_chain
-    init_state = InitState.new(@protocol)
+    init_state = InitState.new
     next_state = init_state.serve(@server_stream)
     
     assert_equal :connect, next_state 
@@ -29,7 +29,7 @@ class TestSmtpStates < Test::Unit::TestCase
   
   def test_helo_is_accepted_while_in_connect_state
     @client_stream.puts "HELO test.client"
-    connect_state = ConnectState.new(@protocol)
+    connect_state = ConnectState.new
 
     connect_state.serve(@server_stream)
     
@@ -38,7 +38,7 @@ class TestSmtpStates < Test::Unit::TestCase
   
   def test_connect_state_passes_protocol_connected_as_the_next_state_in_the_chain
     @client_stream.puts "HELO test.client"
-    connect_state = ConnectState.new(@protocol)
+    connect_state = ConnectState.new
 
     next_state = connect_state.serve(@server_stream)
     
@@ -47,7 +47,7 @@ class TestSmtpStates < Test::Unit::TestCase
   
   def test_from_okayed_while_in_connected_state
     @client_stream.puts "MAIL FROM:<adam@esterlines.com>"
-    connected_state = ConnectedState.new(@protocol)
+    connected_state = ConnectedState.new
 
     connected_state.serve(@server_stream)
     
@@ -56,7 +56,7 @@ class TestSmtpStates < Test::Unit::TestCase
   
   def test_connected_state_passes_protocol_connected_as_the_next_state_when_client_sends_from_request
     @client_stream.puts "MAIL FROM:<junk@junkster.com>"
-    connected_state = ConnectedState.new(@protocol)
+    connected_state = ConnectedState.new
 
     next_state = connected_state.serve(@server_stream)
     
@@ -65,7 +65,7 @@ class TestSmtpStates < Test::Unit::TestCase
   
   def test_rcpt_okayed_while_in_connected_state
     @client_stream.puts "RCPT TO:<junk@junkster.com>"    
-    connected_state = ConnectedState.new(@protocol)
+    connected_state = ConnectedState.new
 
     connected_state.serve(@server_stream)
     
@@ -74,7 +74,7 @@ class TestSmtpStates < Test::Unit::TestCase
   
   def test_connected_state_passes_protocol_connected_as_the_next_state_when_client_sends_rcpt_request
     @client_stream.puts "RCPT TO:<foo@foo.com>"    
-    connected_state = ConnectedState.new(@protocol)
+    connected_state = ConnectedState.new
 
     next_state = connected_state.serve(@server_stream)
     
@@ -83,7 +83,7 @@ class TestSmtpStates < Test::Unit::TestCase
   
   def test_data_request_given_the_go_ahead_while_in_connected_state
     @client_stream.puts "DATA"
-    connected_state = ConnectedState.new(@protocol)
+    connected_state = ConnectedState.new
 
     connected_state.serve(@server_stream)
     
@@ -92,7 +92,7 @@ class TestSmtpStates < Test::Unit::TestCase
   
   def test_connected_state_passes_protocol_read_mail_as_the_next_state_when_client_sends_data_request
     @client_stream.puts "DATA"
-    connected_state = ConnectedState.new(@protocol)
+    connected_state = ConnectedState.new
 
     next_state = connected_state.serve(@server_stream)
     
@@ -129,7 +129,7 @@ class TestSmtpStates < Test::Unit::TestCase
   
   def test_quit_state_reads_client_quit_and_says_goodbye
     @client_stream.puts "QUIT"
-    quit_state = QuitState.new(@protocol)
+    quit_state = QuitState.new
     
     quit_state.serve(@server_stream)
     
@@ -138,7 +138,7 @@ class TestSmtpStates < Test::Unit::TestCase
 
   def test_quit_state_passes_done_as_next_state
     @client_stream.puts "QUIT"
-    quit_state = QuitState.new(@protocol)
+    quit_state = QuitState.new
     
     next_state = quit_state.serve(@server_stream)
   

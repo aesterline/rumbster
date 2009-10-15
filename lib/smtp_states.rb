@@ -1,13 +1,5 @@
 class NotInitializedError < RuntimeError; end
 
-module State
-  attr_accessor :protocol
-  
-  def serve(io)
-    service_request(io)
-  end  
-end
-
 module Messages
   
   def greeting(io)
@@ -34,15 +26,9 @@ end
 
 class InitState
   
-  include State, Messages
+  include Messages
   
-  def initialize(protocol = nil)
-    @protocol = protocol
-  end
-  
-  private
-    
-  def service_request(io)
+  def serve(io)
     greeting(io)
 
     :connect
@@ -52,15 +38,9 @@ end
 
 class ConnectState
   
-  include State, Messages
+  include Messages
 
-  def initialize(protocol = nil)
-    @protocol = protocol
-  end
-    
-  private
-  
-  def service_request(io)
+  def serve(io)
     read_client_helo(io)
     helo_response(io)
 
@@ -75,15 +55,9 @@ end
 
 class ConnectedState
   
-  include State, Messages
+  include Messages
   
-  def initialize(protocol = nil)
-    @protocol = protocol
-  end
-  
-  private
-  
-  def service_request(io)
+  def serve(io)
     request = io.readline
     
     if request.strip.eql? "DATA"
@@ -98,16 +72,14 @@ class ConnectedState
 end
 
 class ReadMailState
-  
-  include State, Messages
+  attr_accessor :protocol 
+  include Messages
   
   def initialize(protocol = nil)
     @protocol = protocol
   end
   
-  private
-  
-  def service_request(io)
+  def serve(io)
     message = read_message(io)
     @protocol.new_message_received(message)
     ok(io)
@@ -136,15 +108,11 @@ end
 class QuitState
   
   include Messages
-  attr_accessor :protocol
-  
-  def initialize(protocol = nil)
-    @protocol = protocol
-  end
   
   def serve(io)
     read_quit(io)
     goodbye(io)
+
     :done
   end
   
