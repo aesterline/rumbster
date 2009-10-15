@@ -7,7 +7,6 @@ module State
     raise NotInitializedError.new if @protocol.nil?
     
     service_request(io)
-    @next_state
   end  
 end
 
@@ -39,15 +38,16 @@ class InitState
   
   include State, Messages
   
-  def initialize(protocol = nil, next_state = :connect)
+  def initialize(protocol = nil)
     @protocol = protocol
-    @next_state = next_state
   end
   
   private
     
   def service_request(io)
     greeting(io)
+
+    :connect
   end
   
 end
@@ -56,9 +56,8 @@ class ConnectState
   
   include State, Messages
 
-  def initialize(protocol = nil, next_state = :connected)
+  def initialize(protocol = nil)
     @protocol = protocol
-    @next_state = next_state
   end
     
   private
@@ -66,6 +65,8 @@ class ConnectState
   def service_request(io)
     read_client_helo(io)
     helo_response(io)
+
+    :connected
   end
   
   def read_client_helo(io)
@@ -80,7 +81,6 @@ class ConnectedState
   
   def initialize(protocol = nil)
     @protocol = protocol
-    @next_state = :connected
   end
   
   private
@@ -89,10 +89,11 @@ class ConnectedState
     request = io.readline
     
     if request.strip.eql? "DATA"
-      @next_state = :read_mail
       go_ahead(io)
+      :read_mail
     else
       ok(io)
+      :connected
     end
   end
   
@@ -104,7 +105,6 @@ class ReadMailState
   
   def initialize(protocol = nil)
     @protocol = protocol
-    @next_state = :quit
   end
   
   private
@@ -113,10 +113,8 @@ class ReadMailState
     message = read_message(io)
     @protocol.new_message_received(message)
     ok(io)
-  end
-  
-  def not_end_of_message(line)
-    not line.strip.eql?('.')
+
+    :quit
   end
   
   def read_message(io)
@@ -129,6 +127,10 @@ class ReadMailState
     end
     
     message
+  end
+
+  def not_end_of_message(line)
+    not line.strip.eql?('.')
   end
   
 end
