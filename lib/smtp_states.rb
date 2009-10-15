@@ -4,8 +4,6 @@ module State
   attr_accessor :protocol
   
   def serve(io)
-    raise NotInitializedError.new if @protocol.nil?
-    
     service_request(io)
   end  
 end
@@ -145,8 +143,6 @@ class QuitState
   end
   
   def serve(io)
-    raise NotInitializedError.new if @protocol.nil?
-    
     read_quit(io)
     goodbye(io)
     :done

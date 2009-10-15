@@ -5,14 +5,6 @@ require 'smtp_protocol'
 
 class TestSmtpProtocol < Test::Unit::TestCase
   
-  def test_protocol_sets_protocol_property_on_each_state
-    init_state = TestState.new
-    
-    protocol = SmtpProtocol.new(:init, {:init => init_state})
-
-    assert_same protocol, init_state.protocol
-  end
-  
   def test_protocol_starts_in_the_initial_state
     init_state = TestState.new
     

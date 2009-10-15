@@ -19,7 +19,7 @@ class SmtpProtocol
   end
 
   def initialize(initial_state, states)
-    states.each_value { |state| state.protocol = self }
+    states[:read_mail].protocol = self unless states[:read_mail].nil?
 
     @states = states
   end

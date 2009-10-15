@@ -27,14 +27,6 @@ class TestSmtpStates < Test::Unit::TestCase
     assert_equal :connect, next_state 
   end
   
-  def test_initial_state_raises_not_initialized_when_protocol_is_not_set
-    init_state = InitState.new
-    
-    assert_raise NotInitializedError do 
-      init_state.serve(@server_stream)
-    end
-  end
-     
   def test_helo_is_accepted_while_in_connect_state
     @client_stream.puts "HELO test.client"
     connect_state = ConnectState.new(@protocol)
@@ -53,14 +45,6 @@ class TestSmtpStates < Test::Unit::TestCase
     assert_equal :connected, next_state 
   end
   
-  def test_connect_state_raises_not_initialized_when_protocol_is_not_set
-    connect_state = ConnectState.new
-    
-    assert_raise NotInitializedError do
-      connect_state.serve(@server_stream)
-    end
-  end
-    
   def test_from_okayed_while_in_connected_state
     @client_stream.puts "MAIL FROM:<adam@esterlines.com>"
     connected_state = ConnectedState.new(@protocol)
@@ -115,14 +99,6 @@ class TestSmtpStates < Test::Unit::TestCase
     assert_equal :read_mail, next_state 
   end
   
-  def test_connected_state_raises_not_initialized_when_protocol_is_not_set
-    connected_state = ConnectedState.new
-    
-    assert_raise NotInitializedError do
-      connected_state.serve(@server_stream)
-    end
-  end
-  
   def test_read_mail_state_reads_until_a_single_dot_is_found_on_a_line_then_returns_an_ok_message
     @client_stream.puts "To: junk@junk.com\nFrom: junk2@junk2.com\n\nHi\n.\n"
     read_mail_state = ReadMailState.new(@protocol)
@@ -151,14 +127,6 @@ class TestSmtpStates < Test::Unit::TestCase
     assert_equal :quit, next_state 
   end
   
-  def test_read_mail_state_raises_not_initialized_when_protocol_is_not_set
-    read_mail_state = ReadMailState.new
-    
-    assert_raise NotInitializedError do
-      read_mail_state.serve(@server_stream)
-    end
-  end
-  
   def test_quit_state_reads_client_quit_and_says_goodbye
     @client_stream.puts "QUIT"
     quit_state = QuitState.new(@protocol)
@@ -175,14 +143,6 @@ class TestSmtpStates < Test::Unit::TestCase
     next_state = quit_state.serve(@server_stream)
   
     assert_equal :done, next_state
-  end
-  
-  def test_quit_state_raises_not_initialized_when_protocol_is_not_set
-    quit_state = QuitState.new
-    
-    assert_raise NotInitializedError do
-      quit_state.serve(@server_stream)
-    end
   end
   
 end
