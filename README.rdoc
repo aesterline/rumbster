@@ -13,26 +13,25 @@ A good source for usage information is the unit tests in the
 test directory.   Below is an example of the usage.
 
  class TestEmails < Test::Unit::TestCase
+   def setup
+     @rumbster = Rumbster.new(port)
+     @message_observer = MailMessageObserver.new
 
-  def setup
-    @rumbster = Rumbster.new(port)
-    @message_observer = MailMessageObserver.new
+     @rumbster.add_observer @message_observer
+     @rumbster.add_observer FileMessageObserver.new('some/directory')
 
-    @rumbster.add_observer @message_observer
-    @rumbster.add_observer FileMessageObserver.new('some/directory')
+     @rumbster.start
+   end
 
-    @rumbster.start
-  end
+   def teardown
+     @rumbster.stop
+   end
 
-  def teardown
-    @rumbster.stop
-  end
-
-  def test_email_is_sent
-    send_email
-    assert_equal 1, @message_observer.messages.size
-    assert_equal 'junk@junk.com', @message_observer.messages.first.to
-  end
+   def test_email_is_sent
+     send_email
+     assert_equal 1, @message_observer.messages.size
+     assert_equal 'junk@junk.com', @message_observer.messages.first.to
+   end
  end
 
 == Contributing to rumbster
