@@ -6,3 +6,6 @@ group :development do
   gem "rcov", ">= 0"
   gem "rdoc"
 end
+
+gem "mail"
+gem "jruby-openssl", :platforms => :jruby

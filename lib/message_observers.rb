@@ -1,7 +1,7 @@
 $:.unshift(File.join(File.dirname(__FILE__), '..', 'vendor'))
 
 require 'fileutils'
-require 'tmail'
+require 'mail'
 
 class FileMessageObserver
   include FileUtils
@@ -13,7 +13,7 @@ class FileMessageObserver
   end
 
   def update(message_string)
-    mail = TMail::Mail.parse(message_string)
+    mail = Mail.read_from_string(message_string)
     
     file_name = File.join(@message_directory, "#{@system_time.current_time_in_seconds}_#{mail.to}.txt")    
     File.open(file_name, 'w') {|file| file << message_string }
@@ -28,7 +28,7 @@ class MailMessageObserver
   end
   
   def update(message_string)
-    @messages << TMail::Mail.parse(message_string)
+    @messages << Mail.read_from_string(message_string)
   end
   
 end
