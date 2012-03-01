@@ -8,4 +8,3 @@ group :development do
 end
 
 gem "mail"
-gem "jruby-openssl", :platforms => :jruby
