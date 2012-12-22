@@ -4,20 +4,21 @@
 # -*- encoding: utf-8 -*-
 
 Gem::Specification.new do |s|
-  s.name = %q{rumbster}
-  s.version = "1.0.2"
+  s.name = "rumbster"
+  s.version = "1.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Adam Esterline"]
-  s.date = %q{2012-03-01}
-  s.description = %q{Rumbster is a simple SMTP server that receives email sent from a SMTP client. Received emails are published to observers that have registered with Rumbster. There are currently two observers; FileMailObserver and MailMessageObserver.}
-  s.email = %q{adam@esterlines.com}
+  s.date = "2012-12-22"
+  s.description = "Rumbster is a simple SMTP server that receives email sent from a SMTP client. Received emails are published to observers that have registered with Rumbster. There are currently two observers; FileMailObserver and MailMessageObserver."
+  s.email = "adam@esterlines.com"
   s.extra_rdoc_files = [
     "LICENSE.txt",
     "README.rdoc"
   ]
   s.files = [
     ".autotest",
+    ".travis.yml",
     "Gemfile",
     "Gemfile.lock",
     "LICENSE.txt",
@@ -34,11 +35,11 @@ Gem::Specification.new do |s|
     "test/test_smtp_protocol.rb",
     "test/test_smtp_states.rb"
   ]
-  s.homepage = %q{http://github.com/aesterline/rumbster}
+  s.homepage = "http://github.com/aesterline/rumbster"
   s.licenses = ["Apache 2.0"]
   s.require_paths = ["lib"]
-  s.rubygems_version = %q{1.6.2}
-  s.summary = %q{Rumbster is a testing SMTP server.}
+  s.rubygems_version = "1.8.24"
+  s.summary = "Rumbster is a testing SMTP server."
 
   if s.respond_to? :specification_version then
     s.specification_version = 3
