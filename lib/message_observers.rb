@@ -14,8 +14,8 @@ class FileMessageObserver
 
   def update(message_string)
     mail = Mail.read_from_string(message_string)
-    
-    file_name = File.join(@message_directory, "#{@system_time.current_time_in_seconds}_#{mail.to}.txt")    
+
+    file_name = File.join(@message_directory, "#{@system_time.current_time_in_seconds}_#{mail.to.first}.txt")    
     File.open(file_name, 'w') {|file| file << message_string }
   end
 end

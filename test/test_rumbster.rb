@@ -18,6 +18,7 @@ class TestRumbster < Test::Unit::TestCase
   
   def teardown
     @server.stop
+    @server.join
   end
   
   def test_single_receiver_message_sent_by_client_is_received_by_listener
